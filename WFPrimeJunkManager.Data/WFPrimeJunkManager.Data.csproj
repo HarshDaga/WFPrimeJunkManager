@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Flurl" Version="3.0.0-pre4" />
+    <PackageReference Include="Flurl.Http" Version="3.0.0-pre4" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.48.0.2037" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.2.0-eap" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
+  </ItemGroup>
+
+</Project>
