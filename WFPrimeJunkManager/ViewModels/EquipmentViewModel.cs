@@ -26,8 +26,11 @@ namespace WFPrimeJunkManager.ViewModels
 		public Dictionary<string, EquipmentPartViewModel> Parts { get; set; } =
 			new Dictionary<string, EquipmentPartViewModel> ( );
 
-		public EquipmentViewModel ( Equipment equipment )
+		private readonly MainViewModel _parent;
+
+		public EquipmentViewModel ( MainViewModel parent, Equipment equipment )
 		{
+			_parent   = parent;
 			Equipment = equipment;
 			Name      = equipment.Name;
 			Type      = equipment.Type;
@@ -48,6 +51,7 @@ namespace WFPrimeJunkManager.ViewModels
 			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( SetsOwned ) ) );
 			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( Parts ) ) );
 			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( PartsOwnedForNextSet ) ) );
+			_parent.Invalidate ( );
 		}
 	}
 }

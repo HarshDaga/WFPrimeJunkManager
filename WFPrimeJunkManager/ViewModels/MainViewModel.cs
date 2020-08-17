@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,21 +11,36 @@ namespace WFPrimeJunkManager.ViewModels
 {
 	public class MainViewModel : INotifyPropertyChanged
 	{
-		public Dictionary<string, List<EquipmentViewModel>> Equipments { get; set; }
+		public IDictionary<string, List<EquipmentViewModel>> Equipments =>
+			_equipments
+				.ToDictionary ( x => x.Key, x => x.Value.Where ( FilterEquipment ) )
+				.Where ( x => x.Value.Any ( ) )
+				.ToDictionary ( x => x.Key, x => x.Value.ToList ( ) );
+
+		public bool   ShowOnlyOwned { get; set; }
+		public bool   ShowVaulted   { get; set; }
+		public string SearchText    { get; set; } = "";
+
+		public int TotalDucats => Equipments.Values
+											.SelectMany ( x => x.SelectMany ( y => y.Parts.Values ) )
+											.Sum ( x => x.Ducats * x.Owned );
+
+		private readonly Dictionary<string, List<EquipmentViewModel>> _equipments;
 
 		public MainViewModel ( )
 		{
 			Fetch ( ).Wait ( );
 			LoadPersonalData ( );
 			LivePrices.Init ( );
+			ShowVaulted = true;
 
 			var ungrouped = new Dictionary<string, EquipmentViewModel> ( );
 			foreach ( var (name, equipment) in Globals.PersonalData.Equipments )
-				ungrouped[name] = new EquipmentViewModel ( equipment );
+				ungrouped[name] = new EquipmentViewModel ( this, equipment );
 
-			Equipments = ungrouped
-						 .GroupBy ( x => x.Value.Type )
-						 .ToDictionary ( x => x.Key, x => x.Select ( y => y.Value ).ToList ( ) );
+			_equipments = ungrouped
+						  .GroupBy ( x => x.Value.Type )
+						  .ToDictionary ( x => x.Key, x => x.Select ( y => y.Value ).ToList ( ) );
 		}
 #pragma warning disable CS0067
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -48,6 +64,27 @@ namespace WFPrimeJunkManager.ViewModels
 
 			Persist.Save ( data );
 			Globals.PersonalData = data;
+		}
+
+		public void Invalidate ( )
+		{
+			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( Equipments ) ) );
+			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( TotalDucats ) ) );
+		}
+
+		private bool FilterEquipment ( EquipmentViewModel equipment )
+		{
+			var result = true;
+			if ( ShowOnlyOwned )
+				result &= equipment.PartsOwnedForNextSet > 0;
+			result &= ShowVaulted || !equipment.IsVaulted;
+
+			if ( !string.IsNullOrWhiteSpace ( SearchText ) )
+				result &= equipment.Name.Contains ( SearchText, StringComparison.OrdinalIgnoreCase ) ||
+						  equipment.Parts.Values.Any (
+							  x => x.Name.Contains ( SearchText, StringComparison.OrdinalIgnoreCase ) );
+
+			return result;
 		}
 	}
 }

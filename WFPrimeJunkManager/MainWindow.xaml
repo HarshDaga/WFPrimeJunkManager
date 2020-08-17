@@ -18,84 +18,119 @@
     </Window.Resources>
 
     <Grid>
-        <TreeView Margin="10" FontSize="24"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                  ItemsSource="{Binding Equipments}">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Path=Value}">
-                    <TextBlock FontWeight="Bold" Text="{Binding Path=Key}" />
-                    <HierarchicalDataTemplate.ItemTemplate>
-                        <HierarchicalDataTemplate DataType="{x:Type vm:EquipmentViewModel}"
-                                                  ItemsSource="{Binding Parts.Values}">
-                            <Grid HorizontalAlignment="Left">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="300" />
-                                    <ColumnDefinition Width="200" />
-                                    <ColumnDefinition Width="100" />
-                                    <ColumnDefinition Width="100" />
-                                </Grid.ColumnDefinitions>
-                                <Grid>
-                                    <mah:MetroProgressBar Minimum="0"
-                                                          Value="{Binding PartsOwnedForNextSet, Mode=OneWay}"
-                                                          Maximum="{Binding TotalPartsNeeded}"
-                                                          Foreground="LimeGreen" />
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}" />
-                                        <TextBlock Text=" (vaulted)"
-                                                   Visibility="{Binding IsVaulted, Converter={StaticResource BoolToVisibilityConverter}}"
-                                                   FontSize="10" FontStyle="Italic" />
-                                    </StackPanel>
-                                </Grid>
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding SetsOwned, Mode=OneWay, StringFormat='\{0\} sets'}" />
-                                <TextBlock Grid.Column="2" TextAlignment="Right" Foreground="LightGray"
-                                           Text="{Binding Price, Mode=OneWay, StringFormat='\{0\}p'}" />
-                                <TextBlock Grid.Column="3" TextAlignment="Right" Foreground="Gold"
-                                           Text="{Binding Ducats, Mode=OneWay, StringFormat='\{0\}d'}" />
-                            </Grid>
-                            <HierarchicalDataTemplate.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vm:EquipmentPartViewModel}">
-                                    <Grid HorizontalAlignment="Left">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition MinWidth="300" Width="Auto" />
-                                            <ColumnDefinition Width="190" />
-                                            <ColumnDefinition Width="100" />
-                                            <ColumnDefinition Width="100" />
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Column="0"
-                                                    Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Name}" />
-                                            <TextBlock Text=" (v)"
-                                                       Visibility="{Binding IsVaulted, Converter={StaticResource BoolToVisibilityConverter}}"
-                                                       FontSize="10" FontStyle="Italic" />
-                                        </StackPanel>
+        <mah:MetroTabControl TabStripPlacement="Bottom">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+            </TabControl.Resources>
+            <mah:MetroTabItem Header="Equipment">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <mah:ToggleSwitch Grid.Column="0" Margin="10, 0"
+                                          Content="Owned" IsOn="{Binding ShowOnlyOwned}"
+                                          VerticalAlignment="Center" FontSize="24" />
+                        <mah:ToggleSwitch Grid.Column="1" Margin="10,0"
+                                          Content="Vaulted" IsOn="{Binding ShowVaulted}"
+                                          VerticalAlignment="Center" FontSize="24" />
+                        <TextBox Grid.Column="2" Margin="10"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" FontSize="24" />
+                    </Grid>
+                    <TreeView Grid.Row="1" Margin="10" FontSize="24"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                              ItemsSource="{Binding Equipments}">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Path=Value}">
+                                <TextBlock FontWeight="Bold" Text="{Binding Path=Key}" />
+                                <HierarchicalDataTemplate.ItemTemplate>
+                                    <HierarchicalDataTemplate DataType="{x:Type vm:EquipmentViewModel}"
+                                                              ItemsSource="{Binding Parts.Values}">
+                                        <Grid HorizontalAlignment="Left">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" MinWidth="300" />
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="100" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid>
+                                                <mah:MetroProgressBar Minimum="0"
+                                                                      Value="{Binding PartsOwnedForNextSet, Mode=OneWay}"
+                                                                      Maximum="{Binding TotalPartsNeeded}"
+                                                                      Foreground="LimeGreen" />
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" />
+                                                    <TextBlock Text=" (vaulted)"
+                                                               Visibility="{Binding IsVaulted, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                               FontSize="10" FontStyle="Italic" />
+                                                </StackPanel>
+                                            </Grid>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding SetsOwned, Mode=OneWay, StringFormat='\{0\} sets'}" />
+                                            <TextBlock Grid.Column="2" TextAlignment="Right" Foreground="LightGray"
+                                                       Text="{Binding Price, Mode=OneWay, StringFormat='\{0\}p'}" />
+                                            <TextBlock Grid.Column="3" TextAlignment="Right" Foreground="Gold"
+                                                       Text="{Binding Ducats, Mode=OneWay, StringFormat='\{0\}d'}" />
+                                        </Grid>
+                                        <HierarchicalDataTemplate.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type vm:EquipmentPartViewModel}">
+                                                <Grid HorizontalAlignment="Left">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition MinWidth="300" Width="Auto" />
+                                                        <ColumnDefinition Width="190" />
+                                                        <ColumnDefinition Width="100" />
+                                                        <ColumnDefinition Width="100" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0"
+                                                                Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Name}" />
+                                                        <TextBlock Text=" (v)"
+                                                                   Visibility="{Binding IsVaulted, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                                   FontSize="10" FontStyle="Italic" />
+                                                    </StackPanel>
 
-                                        <StackPanel Grid.Column="1"
-                                                    Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Owned, StringFormat='\{0\}/'}" />
-                                            <TextBlock Text="{Binding Needed, StringFormat='\{0\} '}" />
-                                            <Button Content="+" FontSize="20"
-                                                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
-                                                    Command="{Binding IncrementCommand}"
-                                                    Background="Transparent"
-                                                    Foreground="{DynamicResource MahApps.Brushes.IdealForeground}" />
-                                            <Button Content="-" FontSize="20"
-                                                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
-                                                    Command="{Binding DecrementCommand}"
-                                                    Background="Transparent"
-                                                    Foreground="{DynamicResource MahApps.Brushes.IdealForeground}" />
-                                        </StackPanel>
-                                        <TextBlock Grid.Column="2" TextAlignment="Right" Foreground="LightGray"
-                                                   Text="{Binding Price, StringFormat='\{0\}p'}" />
-                                        <TextBlock Grid.Column="3" TextAlignment="Right" Foreground="Gold"
-                                                   Text="{Binding Ducats, StringFormat='\{0\}d'}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </HierarchicalDataTemplate.ItemTemplate>
-                        </HierarchicalDataTemplate>
-                    </HierarchicalDataTemplate.ItemTemplate>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
+                                                    <StackPanel Grid.Column="1"
+                                                                Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Owned, StringFormat='\{0\}/'}" />
+                                                        <TextBlock Text="{Binding Needed, StringFormat='\{0\} '}" />
+                                                        <Button Content="+" FontSize="20"
+                                                                Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                                                                Command="{Binding IncrementCommand}"
+                                                                Background="Transparent"
+                                                                Foreground="{DynamicResource MahApps.Brushes.IdealForeground}" />
+                                                        <Button Content="-" FontSize="20"
+                                                                Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                                                                Command="{Binding DecrementCommand}"
+                                                                Background="Transparent"
+                                                                Foreground="{DynamicResource MahApps.Brushes.IdealForeground}" />
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="2" TextAlignment="Right"
+                                                               Foreground="LightGray"
+                                                               Text="{Binding Price, StringFormat='\{0\}p'}" />
+                                                    <TextBlock Grid.Column="3" TextAlignment="Right" Foreground="Gold"
+                                                               Text="{Binding Ducats, StringFormat='\{0\}d'}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </HierarchicalDataTemplate.ItemTemplate>
+                                    </HierarchicalDataTemplate>
+                                </HierarchicalDataTemplate.ItemTemplate>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                    <TextBlock Grid.Row="2" Foreground="Gold"
+                               HorizontalAlignment="Center" FontSize="30"
+                               Text="{Binding TotalDucats, StringFormat='\{0\} ducats'}" />
+                </Grid>
+            </mah:MetroTabItem>
+        </mah:MetroTabControl>
     </Grid>
 </mah:MetroWindow>
