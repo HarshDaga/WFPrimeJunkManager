@@ -17,6 +17,7 @@ namespace WFPrimeJunkManager.ViewModels
 		public decimal Price            => LivePrices.Of ( $"{Name} Set" )?.CustomAvg ?? 0m;
 		public int     Ducats           { get; }
 		public int     TotalPartsNeeded { get; }
+		public decimal DucanatorRatio   => Price == 0 ? Ducats : Ducats / Price;
 
 		public int PartsOwnedForNextSet =>
 			Parts.Values.Sum ( x => Math.Min ( x.Owned - SetsOwned * x.Needed, x.Needed ) );

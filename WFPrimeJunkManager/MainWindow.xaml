@@ -3,7 +3,6 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:local="clr-namespace:WFPrimeJunkManager"
                  xmlns:vm="clr-namespace:WFPrimeJunkManager.ViewModels"
                  mc:Ignorable="d"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -35,6 +34,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <mah:ToggleSwitch Grid.Column="0" Margin="10, 0"
@@ -43,7 +43,14 @@
                         <mah:ToggleSwitch Grid.Column="1" Margin="10,0"
                                           Content="Vaulted" IsOn="{Binding ShowVaulted}"
                                           VerticalAlignment="Center" FontSize="24" />
-                        <TextBox Grid.Column="2" Margin="10"
+                        <StackPanel Grid.Column="2" Margin="10,0" Orientation="Horizontal">
+                            <mah:ToggleSwitch Margin="10"
+                                              Content="Ducanator" IsOn="{Binding IsDucanatorEnabled}"
+                                              FontSize="24" />
+                            <mah:NumericUpDown Margin="10"
+                                               Interval="0.1" Value="{Binding DucanatorThreshold}" />
+                        </StackPanel>
+                        <TextBox Grid.Column="3" Margin="10"
                                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" FontSize="24" />
                     </Grid>
                     <TreeView Grid.Row="1" Margin="10" FontSize="24"
@@ -126,9 +133,18 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
-                    <TextBlock Grid.Row="2" Foreground="Gold"
-                               HorizontalAlignment="Center" FontSize="30"
-                               Text="{Binding TotalDucats, StringFormat='\{0\} ducats'}" />
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Foreground="LightGray"
+                                   HorizontalAlignment="Center" FontSize="30"
+                                   Text="{Binding TotalPlat, StringFormat='\{0\} platinum'}" />
+                        <TextBlock Grid.Column="1" Foreground="Gold"
+                                   HorizontalAlignment="Center" FontSize="30"
+                                   Text="{Binding TotalDucats, StringFormat='\{0\} ducats'}" />
+                    </Grid>
                 </Grid>
             </mah:MetroTabItem>
         </mah:MetroTabControl>

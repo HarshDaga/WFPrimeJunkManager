@@ -17,13 +17,19 @@ namespace WFPrimeJunkManager.ViewModels
 				.Where ( x => x.Value.Any ( ) )
 				.ToDictionary ( x => x.Key, x => x.Value.ToList ( ) );
 
-		public bool   ShowOnlyOwned { get; set; }
-		public bool   ShowVaulted   { get; set; }
-		public string SearchText    { get; set; } = "";
+		public bool    ShowOnlyOwned      { get; set; }
+		public bool    ShowVaulted        { get; set; }
+		public bool    IsDucanatorEnabled { get; set; }
+		public string  SearchText         { get; set; } = "";
+		public decimal DucanatorThreshold { get; set; } = 6;
 
 		public int TotalDucats => Equipments.Values
 											.SelectMany ( x => x.SelectMany ( y => y.Parts.Values ) )
 											.Sum ( x => x.Ducats * x.Owned );
+
+		public decimal TotalPlat => Equipments.Values
+											  .SelectMany ( x => x.SelectMany ( y => y.Parts.Values ) )
+											  .Sum ( x => x.Price * x.Owned );
 
 		private readonly Dictionary<string, List<EquipmentViewModel>> _equipments;
 
@@ -70,6 +76,7 @@ namespace WFPrimeJunkManager.ViewModels
 		{
 			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( Equipments ) ) );
 			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( TotalDucats ) ) );
+			PropertyChanged?.Invoke ( this, new PropertyChangedEventArgs ( nameof ( TotalPlat ) ) );
 		}
 
 		private bool FilterEquipment ( EquipmentViewModel equipment )
@@ -83,6 +90,10 @@ namespace WFPrimeJunkManager.ViewModels
 				result &= equipment.Name.Contains ( SearchText, StringComparison.OrdinalIgnoreCase ) ||
 						  equipment.Parts.Values.Any (
 							  x => x.Name.Contains ( SearchText, StringComparison.OrdinalIgnoreCase ) );
+
+			if ( IsDucanatorEnabled )
+				result &= equipment.DucanatorRatio < DucanatorThreshold ||
+						  equipment.Parts.Values.Any ( x => x.DucanatorRatio < DucanatorThreshold );
 
 			return result;
 		}

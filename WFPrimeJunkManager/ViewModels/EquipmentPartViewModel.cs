@@ -9,13 +9,14 @@ namespace WFPrimeJunkManager.ViewModels
 {
 	public class EquipmentPartViewModel : INotifyPropertyChanged
 	{
-		public string  Name      { get; set; }
-		public int     Owned     { get; set; }
-		public int     Needed    { get; set; }
-		public int     Ducats    { get; set; }
-		public bool    IsVaulted { get; set; }
-		public decimal Price     => LivePrices.Of ( _parent.Name, Name )?.CustomAvg ?? 0m;
-		public int     SetsOwned => Owned / Needed;
+		public string  Name           { get; set; }
+		public int     Owned          { get; set; }
+		public int     Needed         { get; set; }
+		public int     Ducats         { get; set; }
+		public bool    IsVaulted      { get; set; }
+		public decimal Price          => LivePrices.Of ( _parent.Name, Name )?.CustomAvg ?? 0m;
+		public int     SetsOwned      => Owned / Needed;
+		public decimal DucanatorRatio => Price == 0 ? Ducats : Ducats / Price;
 
 		public           ICommand           IncrementCommand { get; }
 		public           ICommand           DecrementCommand { get; }
