@@ -4,7 +4,7 @@ A tiny app for the free to play game [Warframe](https://www.warframe.com/) to he
 
 
 
-![](docs\equipment.png)
+![Equipment Screen](docs/equipment.png?raw=true)
 
 
 
