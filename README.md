@@ -28,6 +28,7 @@ At the bottom is a summary of the total plat and ducat value of all the items th
 
 ### Todo:
 
+- Logging
 - Relic View
 - Relic Planner (suggest which relics to open for maximum plat gain)
 - Scrape inventory using image recognition (or other alternatives)
