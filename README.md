@@ -1,3 +1,5 @@
+![.NET Core](https://github.com/HarshDaga/WFPrimeJunkManager/workflows/.NET%20Core/badge.svg)
+
 # Warframe Prime Junk Manager
 
 A tiny app for the free to play game [Warframe](https://www.warframe.com/) to help keep track of your prime inventory and assist in ducat/plat farm.
